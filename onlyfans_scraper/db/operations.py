@@ -107,3 +107,21 @@ def get_media_ids(model_id) -> list:
 
     # A list of single elements and not iterables:
     return list(chain.from_iterable(media_ids))
+
+def drop_table(model_id, username):
+    profile = profiles.get_current_profile()
+
+    database_path = pathlib.Path.home() / configPath / profile / databaseFile
+    print("clearing " + username + " ...")
+    
+    try:
+        with contextlib.closing(sqlite3.connect(database_path)) as conn:
+            with contextlib.closing(conn.cursor()) as cur:
+                do_sql = f"""
+                DROP TABLE '{model_id}'
+                ;"""
+                cur.execute(do_sql)
+                conn.commit()
+                print("done.")
+    except:
+        print(username + " already cleared from database.")
