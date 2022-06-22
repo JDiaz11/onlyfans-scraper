@@ -94,7 +94,11 @@ async def process_urls(headers, username, model_id, urls):
 
 
 def convert_num_bytes(num_bytes: int) -> str:
-    num_digits = int(math.log10(num_bytes)) + 1
+    try:
+        num_digits = int(math.log10(num_bytes)) + 1
+    except:
+        num_digits = 1
+        pass
 
     if num_digits >= 10:
         return f'{round(num_bytes / 10**9, 2)} GB'
@@ -105,7 +109,8 @@ async def download(client, path, model_id, file_size_limit,
                    url, date=None, id_=None, media_type=None):
     filename = url.split('?', 1)[0].rsplit('/', 1)[-1]
     path_to_file = path / filename
-
+    path_filename = url.split('?', 1)[0].rsplit('/', 0)[-1]
+    print(path_filename)
     num_bytes_downloaded = 0
 
     async with client.stream('GET', url) as r:
@@ -125,7 +130,9 @@ async def download(client, path, model_id, file_size_limit,
                         num_bytes_downloaded = r.num_bytes_downloaded
 
         else:
-            r.raise_for_status()
+            path_filename = url.split('?', 1)[0].rsplit('/', 0)[-1]
+            print("Client error '403 Forbidden' for " + path_filename)
+#r.raise_for_status()
 
     if path_to_file.is_file():
         if date:
