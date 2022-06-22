@@ -46,8 +46,10 @@ mainPromptChoices = {
     'Like all of a user\'s posts': 1,
     'Unlike all of a user\'s posts': 2,
     'Migrate an old database': 3,
+    'Clear model history from database': 7,
     'Edit `auth.json` file': 4,
-    'Profiles': 5
+    'Edit `config.json` file': 5,
+    'Profiles': 6
 }
 usernameOrListChoices = {
     'Print a list of my subscriptions': 0,

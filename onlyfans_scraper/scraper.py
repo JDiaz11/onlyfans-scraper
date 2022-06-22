@@ -210,8 +210,11 @@ def process_prompts():
             subscribe_count = process_me(headers)
             parsed_subscriptions = get_models(headers, subscribe_count)
             username, model_id, *_ = get_model(parsed_subscriptions)
-
             do_download_content(headers, username, model_id)
+            
+
+    
+        
 
         # Ask for a username to be entered:
         elif result_username_or_list_prompt == 1:
@@ -230,9 +233,12 @@ def process_prompts():
                 usernames = get_usernames(parsed_subscriptions)
 
                 for username in usernames:
-                    model_id = profile.get_id(headers, username)
-                    do_download_content(
-                        headers, username, model_id, ignore_prompt=True)
+                    try:
+                        model_id = profile.get_id(headers, username)
+                        do_download_content(
+                            headers, username, model_id, ignore_prompt=True)
+                    except:
+                        continue
 
     elif result_main_prompt == 1:
         # Like a user's posts
@@ -308,6 +314,11 @@ def process_prompts():
             profiles.print_profiles()
 
         loop()
+        
+    elif result_main_prompt == 7:
+        username = prompts.username_prompt()
+        model_id = profile.get_id(headers, username)
+        operations.drop_table(model_id, username)
 
 
 def main():
